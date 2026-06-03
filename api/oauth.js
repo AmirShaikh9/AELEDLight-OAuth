@@ -1,18 +1,12 @@
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const SITE = "https://aeled-light-o-auth-1i1u.vercel.app";
 const TOKEN_URL = "https://github.com/login/oauth/access_token";
 
 module.exports = async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname.replace(/\/$/, "");
+  const code = url.searchParams.get("code");
 
-  if (path.endsWith("/callback")) {
-    const code = url.searchParams.get("code");
-    if (!code) {
-      res.status(400).send("Missing code");
-      return;
-    }
+  if (code) {
     try {
       const r = await fetch(TOKEN_URL, {
         method: "POST",
@@ -29,7 +23,7 @@ module.exports = async (req, res) => {
     }
   }
 
-  const redirectUri = `${SITE}/api/oauth/callback`;
+  const redirectUri = `https://aeled-light-o-auth-1i1u.vercel.app/api/oauth`;
   const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo&response_type=code`;
   res.redirect(authUrl);
 };
