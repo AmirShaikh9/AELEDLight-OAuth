@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
       if (!data.access_token) {
         return res.status(400).json(data);
       }
-      return res.redirect(`https://aeledlight.web.app/admin/#access_token=${data.access_token}`);
+      return res.redirect(`https://aeledlight.web.app/admin#access_token=${data.access_token}`);
     } catch (err) {
       return res.status(500).send(err.message);
     }
